@@ -1,0 +1,23 @@
+{
+  "name": "wsk-be-ohtu-s26",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.14.0",
+    "globals": "^17.14.0",
+    "nodemon": "^3.1.14"
+  },
+  "dependencies": {
+    "express": "^5.3.0"
+  }
+}
