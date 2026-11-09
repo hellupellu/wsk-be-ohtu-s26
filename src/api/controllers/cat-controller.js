@@ -23,8 +23,17 @@ const getCatById = (req, res) => {
 
 const postCat = (req, res) => {
   console.log('request', req.body);
-  const id = addCat(req.body);
-  res.status(201).json({cat_id: id});
+  console.log(req.file);
+  console.log(req.file.filename);
+  req.body.filename = req.file.filename;
+
+  const result = addCat(req.body);
+  if (result) {
+    res.status(201);
+    res.json({message: 'New cat added.', result});
+  } else {
+    res.sendStatus(400);
+  }
 };
 
 const deleteCat = (req, res) => {

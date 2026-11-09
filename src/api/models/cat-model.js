@@ -22,7 +22,7 @@ const cats = [
     birthdate: '2021-11-18',
     weight: 7,
     owner: 'Ulla',
-    image: 'https://placecats.com/320/240',
+    image: 'https://placecats.com320/240',
   },
 ];
 
@@ -37,14 +37,14 @@ const findCatById = (id) => {
 };
 
 const addCat = (cat) => {
-  const {name, weight, owner, image, birthdate} = cat;
+  const {cat_name, weight, owner, filename, birthdate} = cat;
   const newId = cats[0].cat_id + 1;
   cats.unshift({
     cat_id: newId,
-    name,
+    cat_name,
     weight,
     owner,
-    image,
+    filename,
     birthdate,
   });
   return newId;
