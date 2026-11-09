@@ -1,13 +1,18 @@
-# api http test request for VSCode
+# api http test requests for VSCode
+@apiUrl = http://127.0.0.1:3000/api/v1
+
 
 ### get cats
-GET http://127.0.0.1:3000/api/v1/cats
+GET {{apiUrl}}/cats
 
 ### get cat by id
-GET http://127.0.0.1:3000/api/v1/cats/1
+GET {{apiUrl}}/cats/8
+
+### get cat by id (FAIL: not found)
+GET {{apiUrl}}/cats/98
 
 ### post new cat
-POST http://127.0.0.1:3000/api/v1/cats
+POST {{apiUrl}}/cats
 Content-Type: application/json
 
 {
@@ -15,5 +20,49 @@ Content-Type: application/json
     "birthdate": "2022-10-10",
     "weight": 4,
     "owner": "Tiina",
-    "image": "https://placekittens.com/310/240"
-  }
+    "image": "https://placecats.com/310/240"
+}
+
+### edit existing cat
+PUT {{apiUrl}}/cats/8
+Content-Type: application/json
+
+{
+    "weight": 6,
+    "owner": "Uusi omistaja"
+}
+
+### delete cat by id
+DELETE {{apiUrl}}/cats/8
+
+### get all users
+GET {{apiUrl}}/users
+### get user by id
+GET {{apiUrl}}/users/3609
+
+### get user by id (not found)
+GET {{apiUrl}}/users/9999
+
+### post new user
+POST {{apiUrl}}/users
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "username": "testuser",
+  "email": "test@metropolia.fi",
+  "role": "user",
+  "password": "password123"
+}
+
+### edit existing user
+PUT {{apiUrl}}/users/3610
+Content-Type: application/json
+
+{
+  "name": "Updated User",
+  "email": "updated@metropolia.fi"
+}
+
+### delete user by id
+DELETE {{apiUrl}}/users/3610
