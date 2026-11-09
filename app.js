@@ -31,7 +31,7 @@ const cats = [
   },
 ];
 
-app.use(express.static('public'));
+app.use('/public', express.static('public'));
 //app.use('/images', express.static('public'));
 
 // needed for reading request body in JSON format
