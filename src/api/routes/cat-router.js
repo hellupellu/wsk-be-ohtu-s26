@@ -9,12 +9,16 @@ import {
 
 // multer imports
 import multer from 'multer';
+import {createThumbnail} from '../../middlewares/upload.js';
 const upload = multer({dest: 'uploads/'});
 
 const catRouter = express.Router();
 
 // Kaikki /api/v1/cats reitit
-catRouter.route('/').get(getAllCats).post(upload.single('cat'), postCat);
+catRouter
+  .route('/')
+  .get(getAllCats)
+  .post(upload.single('cat'), createThumbnail, postCat);
 // Kaikki /api/v1/cats/:id reitit
 catRouter.route('/:id').get(getCatById).delete(deleteCat).put(putCat);
 
