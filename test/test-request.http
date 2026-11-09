@@ -6,7 +6,7 @@
 GET {{apiUrl}}/cats
 
 ### get cat by id
-GET {{apiUrl}}/cats/8
+GET {{apiUrl}}/cats/41
 
 ### get cat by id (FAIL: not found)
 GET {{apiUrl}}/cats/98
@@ -39,7 +39,7 @@ Content-Disposition: form-data; name="weight"
 --MyBoundary
 Content-Disposition: form-data; name="owner"
 
-Ulla
+37
 --MyBoundary
 Content-Disposition: form-data; name="birthdate"
 
@@ -52,13 +52,63 @@ Content-Type: image/jpeg
 --MyBoundary--
 
 ### edit existing cat
-PUT {{apiUrl}}/cats/8
+PUT {{apiUrl}}/cats/43
 Content-Type: application/json
 
 {
     "weight": 6,
-    "owner": "Uusi omistaja"
+    "cat_name": "Dogi Muokattu"
 }
 
 ### delete cat by id
-DELETE {{apiUrl}}/cats/8
+DELETE {{apiUrl}}/cats/43
+
+### get all users
+GET {{apiUrl}}/users
+
+### get user by id
+GET {{apiUrl}}/users/37
+
+### get user by id (FAIL: not found)
+GET {{apiUrl}}/users/9999
+
+### get newly added cat from database
+GET {{apiUrl}}/cats/43
+
+### post new user
+POST {{apiUrl}}/users
+Content-Type: application/json
+
+{
+    "name": "Testi Käyttäjä",
+    "username": "testikayttaja5",
+    "email": "testi5@example.com",
+    "password": "testpassword123",
+    "role": "user"
+}
+
+### get newly added user
+GET {{apiUrl}}/users/38
+
+### update test user
+PUT {{apiUrl}}/users/38
+Content-Type: application/json
+
+{
+    "name": "Muokattu Testikäyttäjä",
+    "username": "testikayttaja5",
+    "email": "testi5@example.com",
+    "role": "user"
+}
+
+### delete test user
+DELETE {{apiUrl}}/users/38
+
+### get deleted user (FAIL: not found)
+GET {{apiUrl}}/users/38
+
+### get cats by user id
+GET {{apiUrl}}/users/37/cats
+
+### get deleted cat (FAIL: not found)
+GET {{apiUrl}}/cats/43

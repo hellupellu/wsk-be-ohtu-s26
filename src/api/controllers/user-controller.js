@@ -1,12 +1,18 @@
-import {addUser, findUserById, listAllUsers} from '../models/user-model.js';
+import {
+  addUser,
+  findUserById,
+  listAllUsers,
+  modifyUser,
+  removeUser,
+} from '../models/user-model.js';
 
-const getAllUsers = (req, res) => {
-  res.json(listAllUsers());
+const getAllUsers = async (req, res) => {
+  res.json(await listAllUsers());
 };
 
-const getUserById = (req, res) => {
+const getUserById = async (req, res) => {
   const id = Number(req.params.id);
-  const user = findUserById(id);
+  const user = await findUserById(id);
 
   if (!user) {
     return res.status(404).json({message: 'Käyttäjää ei löytynyt'});
@@ -15,17 +21,33 @@ const getUserById = (req, res) => {
   res.json(user);
 };
 
-const postUser = (req, res) => {
-  const id = addUser(req.body);
+const postUser = async (req, res) => {
+  const id = await addUser(req.body);
+
+  if (!id) {
+    return res.sendStatus(400);
+  }
+
   res.status(201).json({user_id: id});
 };
 
-const putUser = (req, res) => {
-  res.json({message: 'User item updated.'});
+const putUser = async (req, res) => {
+  const result = await modifyUser(Number(req.params.id), req.body);
+
+  if (result) {
+    res.json({message: 'User updated!'});
+  } else {
+    res.status(404).json({error: 404, message: 'Not found.'});
+  }
 };
 
-const deleteUser = (req, res) => {
-  res.json({message: 'User item deleted.'});
-};
+const deleteUser = async (req, res) => {
+  const result = await removeUser(Number(req.params.id));
 
+  if (result) {
+    res.json({message: 'User removed!'});
+  } else {
+    res.status(404).json({error: 404, message: 'Not found.'});
+  }
+};
 export {getAllUsers, getUserById, postUser, putUser, deleteUser};
