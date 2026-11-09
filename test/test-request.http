@@ -34,3 +34,35 @@ Content-Type: application/json
 
 ### delete cat by id
 DELETE {{apiUrl}}/cats/8
+
+### get all users
+GET {{apiUrl}}/users
+### get user by id
+GET {{apiUrl}}/users/3609
+
+### get user by id (not found)
+GET {{apiUrl}}/users/9999
+
+### post new user
+POST {{apiUrl}}/users
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "username": "testuser",
+  "email": "test@metropolia.fi",
+  "role": "user",
+  "password": "password123"
+}
+
+### edit existing user
+PUT {{apiUrl}}/users/3610
+Content-Type: application/json
+
+{
+  "name": "Updated User",
+  "email": "updated@metropolia.fi"
+}
+
+### delete user by id
+DELETE {{apiUrl}}/users/3610
