@@ -8,10 +8,10 @@ import {
 } from '../controllers/cat-controller.js';
 
 // multer imports
-import multer from 'multer';
-import {createThumbnail} from '../../middlewares/upload.js';
+import {createThumbnail, upload} from '../../middlewares/upload.js';
 import {authenticateToken} from '../../middlewares/authentication.js';
-const upload = multer({dest: 'uploads/'});
+import {body, param} from 'express-validator';
+import {validationErrors} from '../../middlewares/error-handlers.js';
 
 const catRouter = express.Router();
 
@@ -19,13 +19,31 @@ const catRouter = express.Router();
 catRouter
   .route('/')
   .get(authenticateToken, getAllCats)
-  .post(authenticateToken, upload.single('cat'), createThumbnail, postCat);
+  .post(
+    authenticateToken,
+    upload.single('cat'),
+    // TODO: add validators for all fields here
+    body('cat_name').trim().isLength({min: 3, max: 50}),
+    body('weight').isFloat({gt: 0}),
+    body('birthdate').isISO8601({strict: true}),
+    validationErrors,
+    createThumbnail,
+    postCat
+  );
 // Kaikki /api/v1/cats/:id reitit
 catRouter
   .route('/:id')
   .get(getCatById)
   .delete(authenticateToken, deleteCat)
-  .put(authenticateToken, putCat);
+  .put(
+    authenticateToken,
+    param('id').isInt({min: 1}),
+    body('cat_name').optional().trim().isLength({min: 3, max: 50}),
+    body('weight').optional().isFloat({gt: 0}),
+    body('birthdate').optional().isISO8601({strict: true}),
+    validationErrors,
+    putCat
+  );
 
 export default catRouter;
 

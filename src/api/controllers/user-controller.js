@@ -11,40 +11,48 @@ const getAllUsers = async (req, res) => {
   res.json(await listAllUsers());
 };
 
-const getUserById = async (req, res) => {
+const getUserById = async (req, res, next) => {
   const id = Number(req.params.id);
   const user = await findUserById(id);
 
   if (!user) {
-    return res.status(404).json({message: 'Käyttäjää ei löytynyt'});
+    const error = new Error('Käyttäjää ei löytynyt');
+    error.status = 404;
+    return next(error);
   }
 
   res.json(user);
 };
 
-const postUser = async (req, res) => {
+const postUser = async (req, res, next) => {
   req.body.password = await bcrypt.hash(req.body.password, 10);
   const id = await addUser(req.body);
 
   if (!id) {
-    return res.sendStatus(400);
+    const error = new Error('User registration failed');
+    error.status = 400;
+    return next(error);
   }
 
   res.status(201).json({user_id: id});
 };
 
-const putUser = async (req, res) => {
+const putUser = async (req, res, next) => {
   const id = Number(req.params.id);
   const user = res.locals.user;
 
   // Tavallinen käyttäjä saa muokata vain omia tietojaan
   if (user.role !== 'admin' && user.user_id !== id) {
-    return res.sendStatus(403);
+    const error = new Error('Forbidden');
+    error.status = 403;
+    return next(error);
   }
 
   const existingUser = await findUserById(id);
   if (!existingUser) {
-    return res.status(404).json({error: 404, message: 'Not found.'});
+    const error = new Error('Not found.');
+    error.status = 404;
+    return next(error);
   }
 
   const updatedUser = {
@@ -62,17 +70,21 @@ const putUser = async (req, res) => {
   if (result) {
     res.json({message: 'User updated!'});
   } else {
-    res.status(404).json({error: 404, message: 'Not found.'});
+    const error = new Error('Not found.');
+    error.status = 404;
+    return next(error);
   }
 };
 
-const deleteUser = async (req, res) => {
+const deleteUser = async (req, res, next) => {
   const id = Number(req.params.id);
   const user = res.locals.user;
 
   // Tavallinen käyttäjä saa poistaa vain omat tietonsa
   if (user.role !== 'admin' && user.user_id !== id) {
-    return res.sendStatus(403);
+    const error = new Error('Forbidden');
+    error.status = 403;
+    return next(error);
   }
 
   const result = await removeUser(id);
@@ -80,7 +92,9 @@ const deleteUser = async (req, res) => {
   if (result) {
     res.json({message: 'User removed!'});
   } else {
-    res.status(404).json({error: 404, message: 'Not found.'});
+    const error = new Error('Not found.');
+    error.status = 404;
+    return next(error);
   }
 };
 

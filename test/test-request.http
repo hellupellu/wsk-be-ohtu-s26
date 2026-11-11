@@ -188,3 +188,141 @@ Content-Type: application/json
 
 ### Check user role
 GET {{apiUrl}}/users/39
+
+### Test 404 error handler
+GET {{apiUrl}}/foobar
+
+### Post cat without file (FAIL: missing file)
+POST {{apiUrl}}/cats
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{
+    "cat_name": "Testikissa",
+    "weight": 4,
+    "birthdate": "2022-10-08"
+}
+
+### Register user with invalid data (FAIL: validation)
+POST {{apiUrl}}/users
+Content-Type: application/json
+
+{
+    "name": "Te",
+    "username": "ab",
+    "email": "vääräemail",
+    "password": "123"
+}
+
+### Post cat with invalid data (FAIL: validation)
+POST {{apiUrl}}/cats
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: multipart/form-data; boundary=MyBoundary
+
+--MyBoundary
+Content-Disposition: form-data; name="cat_name"
+
+Ab
+--MyBoundary
+Content-Disposition: form-data; name="weight"
+
+-5
+--MyBoundary
+Content-Disposition: form-data; name="birthdate"
+
+wrongdate
+--MyBoundary
+Content-Disposition: form-data; name="cat"; filename="dog.jpg"
+Content-Type: image/jpeg
+
+< ./dog.jpg
+--MyBoundary--
+
+### Get cat with invalid ID (FAIL: validation)
+GET {{apiUrl}}/cats/abc
+
+### Update cat with invalid data (FAIL: validation)
+PUT {{apiUrl}}/cats/41
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{
+    "cat_name": "Ab",
+    "weight": -5,
+    "birthdate": "wrongdate"
+}
+
+### Get user with invalid ID (FAIL: validation)
+GET {{apiUrl}}/users/abc
+
+### Update user with invalid data (FAIL: validation)
+PUT {{apiUrl}}/users/39
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{
+    "name": "Te",
+    "username": "ab",
+    "email": "wrongemail"
+}
+
+### Delete nonexistent cat (FAIL: not found)
+DELETE {{apiUrl}}/cats/99999
+Authorization: Bearer {{login.response.body.token}}
+
+### Update nonexistent cat (FAIL: not found)
+PUT {{apiUrl}}/cats/99999
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{
+    "weight": 5
+}
+
+### Post cat with invalid file type (FAIL: validation)
+POST {{apiUrl}}/cats
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: multipart/form-data; boundary=MyBoundary
+
+--MyBoundary
+Content-Disposition: form-data; name="cat_name"
+
+Testikissa
+--MyBoundary
+Content-Disposition: form-data; name="weight"
+
+4
+--MyBoundary
+Content-Disposition: form-data; name="birthdate"
+
+2022-10-08
+--MyBoundary
+Content-Disposition: form-data; name="cat"; filename="dog.jpg"
+Content-Type: text/plain
+
+< ./dog.jpg
+--MyBoundary--
+
+### Post cat with too large file (FAIL: validation)
+POST {{apiUrl}}/cats
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: multipart/form-data; boundary=MyBoundary
+
+--MyBoundary
+Content-Disposition: form-data; name="cat_name"
+
+Testikissa
+--MyBoundary
+Content-Disposition: form-data; name="weight"
+
+4
+--MyBoundary
+Content-Disposition: form-data; name="birthdate"
+
+2022-10-08
+--MyBoundary
+Content-Disposition: form-data; name="cat"; filename="large-test.jpg"
+Content-Type: image/jpeg
+
+< ./large-test.jpg
+--MyBoundary--
