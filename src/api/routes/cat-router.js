@@ -33,8 +33,13 @@ catRouter
 // Kaikki /api/v1/cats/:id reitit
 catRouter
   .route('/:id')
-  .get(getCatById)
-  .delete(authenticateToken, deleteCat)
+  .get(param('id').isInt({min: 1}), validationErrors, getCatById)
+  .delete(
+    authenticateToken,
+    param('id').isInt({min: 1}),
+    validationErrors,
+    deleteCat
+  )
   .put(
     authenticateToken,
     param('id').isInt({min: 1}),
