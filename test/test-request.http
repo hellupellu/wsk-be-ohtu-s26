@@ -4,6 +4,7 @@
 
 ### get cats
 GET {{apiUrl}}/cats
+Authorization: Bearer {{login.response.body.token}}
 
 ### get cat by id
 GET {{apiUrl}}/cats/41
@@ -112,3 +113,78 @@ GET {{apiUrl}}/users/37/cats
 
 ### get deleted cat (FAIL: not found)
 GET {{apiUrl}}/cats/43
+
+### Register new user
+POST {{apiUrl}}/users
+Content-Type: application/json
+
+{
+    "name": "Matti",
+    "username": "matti",
+    "email": "matti@example.com",
+    "password": "salakala"
+}
+
+### User login
+# @name login
+POST {{apiUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "username": "matti",
+    "password": "salakala"
+}
+
+### Get my user info
+GET http://localhost:3000/api/v1/auth/me
+Authorization: Bearer {{login.response.body.token}}
+
+### delete cat by id
+DELETE {{apiUrl}}/cats/60
+Authorization: Bearer {{login.response.body.token}}
+
+### Update another user's cat (FAIL: not allowed)
+PUT {{apiUrl}}/cats/41
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{
+    "weight": 7
+}
+
+### Update another user (FAIL: forbidden)
+PUT {{apiUrl}}/users/37
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{
+    "name": "Muokattu käyttäjä"
+}
+
+### Delete another user (FAIL: forbidden)
+DELETE {{apiUrl}}/users/37
+Authorization: Bearer {{login.response.body.token}}
+
+### Update own user info
+PUT {{apiUrl}}/users/39
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{
+    "name": "Matti Muokattu"
+}
+
+### Check updated user info
+GET {{apiUrl}}/users/39
+
+### Try to change own role to admin
+PUT {{apiUrl}}/users/39
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{
+    "role": "admin"
+}
+
+### Check user role
+GET {{apiUrl}}/users/39

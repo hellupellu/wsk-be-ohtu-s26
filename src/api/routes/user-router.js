@@ -7,6 +7,7 @@ import {
   deleteUser,
 } from '../controllers/user-controller.js';
 import {getCatsByUserId} from '../controllers/cat-controller.js';
+import {authenticateToken} from '../../middlewares/authentication.js';
 
 const userRouter = express.Router();
 
@@ -14,7 +15,11 @@ const userRouter = express.Router();
 userRouter.route('/').get(getAllUsers).post(postUser);
 
 // Kaikki /api/v1/users/:id reitit
-userRouter.route('/:id').get(getUserById).put(putUser).delete(deleteUser);
+userRouter
+  .route('/:id')
+  .get(getUserById)
+  .put(authenticateToken, putUser)
+  .delete(authenticateToken, deleteUser);
 
 userRouter.get('/:id/cats', getCatsByUserId);
 
